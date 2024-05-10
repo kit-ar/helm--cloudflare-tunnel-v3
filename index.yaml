@@ -3,6 +3,18 @@ entries:
   cf-tunnel-v3:
   - apiVersion: v2
     appVersion: 2024.4.1
+    created: "2024-05-10T20:56:48.969000072Z"
+    description: Creation of a cloudflared deployment - a reverse tunnel for an environment
+      (flex config)
+    digest: 292cd7e859b73866257d47bb2a103ac023db703be07eeae49b446e4e79086ad8
+    icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
+    name: cf-tunnel-v3
+    type: application
+    urls:
+    - https://github.com/kit-ar/helm--cloudflare-tunnel-v3/releases/download/cf-tunnel-v3-3.1006.240401/cf-tunnel-v3-3.1006.240401.tgz
+    version: 3.1006.240401
+  - apiVersion: v2
+    appVersion: 2024.4.1
     created: "2024-04-28T04:36:40.550398648Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
       (flex config)
@@ -73,4 +85,4 @@ entries:
     urls:
     - https://github.com/kit-ar/helm--cloudflare-tunnel-v3/releases/download/cf-tunnel-v3-3.0002.230802/cf-tunnel-v3-3.0002.230802.tgz
     version: 3.0002.230802
-generated: "2024-04-28T04:36:40.550425598Z"
+generated: "2024-05-10T20:56:48.969041219Z"
