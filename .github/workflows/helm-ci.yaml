@@ -7,10 +7,9 @@ on:
   pull_request:
     paths:
       - '.github/workflows/**'
-      - 'helm/cf-tunnel-v3/**'
+      - 'helm/**'
 
 env:
-  CHART_DIR: helm/cf-tunnel-v3
   OCI_REGISTRY: registry-1.docker.io
   OCI_REPO: prfj
 
@@ -18,6 +17,9 @@ jobs:
   build:
     name: publish docker hub
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        charts: ['helm/cf-tunnel-v3']
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
       # added or changed files to the repository.
@@ -33,7 +35,7 @@ jobs:
 
       - name: helm lint
         run: |
-          helm lint $CHART_DIR
+          helm lint ${{ matrix.chart }}
 
       - name: split version from tag
         id: split
@@ -45,7 +47,7 @@ jobs:
       - name: helm package
         if: github.event_name != 'pull_request'
         run: |
-          helm package $CHART_DIR --version ${{ steps.split.outputs.version }} --app-version ${{ steps.split.outputs.version }}
+          helm package ${{ matrix.chart }} --version ${{ steps.split.outputs.version }} --app-version ${{ steps.split.outputs.version }}
 
       - name: helm registry login
         if: github.event_name != 'pull_request'
@@ -61,17 +63,17 @@ jobs:
         uses: mikefarah/yq@master
         if: github.event_name != 'pull_request'
         with:
-          cmd: yq -i '.version = "${{ steps.split.outputs.version }}"' $CHART_DIR/Chart.yaml
+          cmd: yq -i '.version = "${{ steps.split.outputs.version }}"' ${{ matrix.chart }}/Chart.yaml
 
       - name: set chart appVersion to current tag
         uses: mikefarah/yq@master
         if: github.event_name != 'pull_request'
         with:
-          cmd: yq -i '.appVersion = "${{ steps.split.outputs.version }}"' $CHART_DIR/Chart.yaml
+          cmd: yq -i '.appVersion = "${{ steps.split.outputs.version }}"' ${{ matrix.chart }}/Chart.yaml
       
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: github.event_name != 'pull_request'
         with:
-          file_pattern: '${{ env.CHART_DIR }}/Chart.yaml'
+          file_pattern: '${{ matrix.chart }}/Chart.yaml'
           branch: kit-ar/main
           tagging_message: '${{ steps.split.outputs.version }}'
