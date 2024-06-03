@@ -1,12 +1,10 @@
 apiVersion: v2
 name: cf-tunnel-v3
 description: Creation of a cloudflared deployment - a reverse tunnel for an environment (flex config)
-
 # A chart can be either an 'application' or a 'library' chart.
 # Application charts are a collection of templates that can be packaged into versioned archives
 # to be deployed.
 type: application
-
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
@@ -16,12 +14,10 @@ type: application
 # The reason for this is to make the current chart update with the bump when deployed via HelmRelease
 #
 version: "3.1006.240500"
-
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "2024.5.0"
-
+appVersion: "v1.0.0"
 # Let's look professional with a Cloudflare icon.
 icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
