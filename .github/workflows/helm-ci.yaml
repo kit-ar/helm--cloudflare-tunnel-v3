@@ -73,3 +73,5 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           file_pattern: 'helm/cf-tunnel-v3/Chart.yaml'
+          branch: kit-ar/main
+          tagging_message: '${{ steps.split.outputs.version }}'
