@@ -37,22 +37,23 @@ jobs:
 
       - name: split version from tag
         id: split
-        #if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         env:
           TAG: ${{ github.ref_name }}
         run: echo "::set-output name=version::${TAG##*/}"
 
       - name: set chart version  to current tag
         uses: mikefarah/yq@master
+        if: github.event_name != 'pull_request'
         with:
           cmd: yq -i '.appVersion = "${{ steps.split.outputs.version }}"' helm/cf-tunnel-v3/Chart.yaml
 
       - name: set chart appVersion to current tag
         uses: mikefarah/yq@master
+        if: github.event_name != 'pull_request'
         with:
           cmd: yq -i '.appVersion = "${{ steps.split.outputs.version }}"' helm/cf-tunnel-v3/Chart.yaml
       
-
       - name: helm package
         if: github.event_name != 'pull_request'
         run: |
