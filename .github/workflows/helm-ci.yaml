@@ -42,6 +42,21 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: echo "::set-output name=version::${TAG##*/}"
 
+      - name: helm package
+        if: github.event_name != 'pull_request'
+        run: |
+          helm package $CHART_DIR --version ${{ steps.split.outputs.version }} --app-version ${{ steps.split.outputs.version }}
+
+      - name: helm registry login
+        if: github.event_name != 'pull_request'
+        run: |
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | helm registry login $OCI_REGISTRY -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: helm push
+        if: github.event_name != 'pull_request'
+        run: |
+          helm push *-${{ steps.split.outputs.version }}.tgz oci://$OCI_REGISTRY/$OCI_REPO
+    
       - name: set chart version  to current tag
         uses: mikefarah/yq@master
         if: github.event_name != 'pull_request'
@@ -54,21 +69,6 @@ jobs:
         with:
           cmd: yq -i '.appVersion = "${{ steps.split.outputs.version }}"' helm/cf-tunnel-v3/Chart.yaml
       
-      - name: helm package
-        if: github.event_name != 'pull_request'
-        run: |
-          helm package $CHART_DIR
-
-      - name: helm registry login
-        if: github.event_name != 'pull_request'
-        run: |
-          echo ${{ secrets.DOCKERHUB_TOKEN }} | helm registry login $OCI_REGISTRY -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-      - name: helm push
-        if: github.event_name != 'pull_request'
-        run: |
-          helm push *-${{ steps.split.outputs.version }}.tgz oci://$OCI_REGISTRY/$OCI_REPO
-    
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: github.event_name != 'pull_request'
         with:
