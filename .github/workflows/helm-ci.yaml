@@ -61,7 +61,7 @@ jobs:
         uses: mikefarah/yq@master
         if: github.event_name != 'pull_request'
         with:
-          cmd: yq -i '.appVersion = "${{ steps.split.outputs.version }}"' helm/cf-tunnel-v3/Chart.yaml
+          cmd: yq -i '.version = "${{ steps.split.outputs.version }}"' helm/cf-tunnel-v3/Chart.yaml
 
       - name: set chart appVersion to current tag
         uses: mikefarah/yq@master
