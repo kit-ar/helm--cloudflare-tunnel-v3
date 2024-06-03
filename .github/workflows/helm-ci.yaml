@@ -2,6 +2,8 @@ name: "helm-ci"
 
 on:
   push:
+    branches:
+      - kit-ar/main
     tags:
       - kit-ar/pub/v*.*.*
   pull_request:
