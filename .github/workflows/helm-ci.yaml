@@ -1,0 +1,63 @@
+name: "helm-ci"
+
+on:
+  push:
+    tags:
+      - kit-ar/pub/v*.*.*
+  pull_request:
+    paths:
+      - '.github/workflows/*'
+      - 'charts/**/Chart.yaml'
+
+env:
+  CHART_DIR: helm/cf-tunnel-v3
+  OCI_REGISTRY: registry-1.docker.io
+  OCI_REPO: prfj
+
+jobs:
+  build:
+    name: publish docker hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'latest'
+
+      - name: helm lint
+        run: |
+          helm lint $CHART_DIR
+
+      - name: split version from tag
+        id: split
+        if: github.event_name != 'pull_request'
+        env:
+          TAG: ${{ github.ref_name }}
+        run: echo "::set-output name=version::${TAG##*/}"
+
+      - name: set chart version and appVersion to current tag
+        if: github.event_name != 'pull_request'
+        working-directory: $CHART_DIR
+        run: |
+          apt install yq && \
+          yq -i '.version = "${{ steps.split.outputs.version }}"' Chart.yaml && \
+          yq -i '.appVersion = "${{ steps.split.outputs.version }}"' Chart.yaml
+
+      - name: helm package
+        if: github.event_name != 'pull_request'
+        run: |
+          helm package $CHART_DIR
+
+      - name: helm registry login
+        if: github.event_name != 'pull_request'
+        run: |
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | helm registry login $OCI_REGISTRY -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: helm push
+        if: github.event_name != 'pull_request'
+        run: |
+          helm push *-${{ steps.split.outputs.version }}.tgz oci://$OCI_REGISTRY/$OCI_REPO
+    
