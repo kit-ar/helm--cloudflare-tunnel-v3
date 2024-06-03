@@ -12,7 +12,7 @@ on:
 env:
   CHART_DIR: helm/cf-tunnel-v3
   OCI_REGISTRY: registry-1.docker.io
-  OCI_REPO: prfj/my-repo
+  OCI_REPO: prfj
 
 jobs:
   build:
