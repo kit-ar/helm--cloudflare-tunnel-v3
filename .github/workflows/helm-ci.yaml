@@ -43,8 +43,8 @@ jobs:
         run: echo "::set-output name=version::${TAG##*/}"
 
       - name: set chart version and appVersion to current tag
-        if: github.event_name != 'pull_request'
-        working-directory: $CHART_DIR
+#        if: github.event_name != 'pull_request'
+        working-directory: helm/cf-tunnel-v3
         run: |
           apt install yq && \
           yq -i '.version = "${{ steps.split.outputs.version }}"' Chart.yaml && \
@@ -68,4 +68,4 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: github.event_name != 'pull_request'
         with:
-          file_pattern: '$CHART_DIR/Chart.yaml'
+          file_pattern: 'helm/cf-tunnel-v3/Chart.yaml'
