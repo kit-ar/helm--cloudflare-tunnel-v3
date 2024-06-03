@@ -7,7 +7,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/*'
-      - 'charts/**/Chart.yaml'
+      - 'helm/**/Chart.yaml'
 
 env:
   CHART_DIR: helm/cf-tunnel-v3
@@ -68,4 +68,4 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: github.event_name != 'pull_request'
         with:
-          file_pattern: 'Chart.yaml'
+          file_pattern: '$CHART_DIR/Chart.yaml'
