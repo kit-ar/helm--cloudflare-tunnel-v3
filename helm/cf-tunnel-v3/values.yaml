@@ -25,7 +25,7 @@ cloudflare:
   # # mode B: tunnel credentials.json authentication (older mode, but prob easier for automation)
   # #
   # existingSecretCred: REPLACE-ME
-  # tunnelName: REQUIRED-FOR-CREDENTIALS-JSON
+  tunnelName: mock
   # # if set, will mount the named secret as credentials.json
   # # this is used to define credentials for tunnels created from "cloudflare tunnel create"
   #
