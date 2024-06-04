@@ -1,9 +1,6 @@
 name: Lint and Test Charts
 
 on:
-  push:
-    tags:
-      - kit-ar/pub/v*.*.*
   pull_request:
 
 jobs:
