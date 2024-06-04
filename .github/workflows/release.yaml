@@ -30,40 +30,33 @@ jobs:
 
       - name: split version from tag
         id: split
-        if: github.event_name != 'pull_request'
         env:
           TAG: ${{ github.ref_name }}
         run: echo "::set-output name=version::${TAG##*/}"
 
       - name: helm package
-        if: github.event_name != 'pull_request'
         run: |
           helm package ${{ matrix.chart }} --version ${{ steps.split.outputs.version }} --app-version ${{ steps.split.outputs.version }}
 
       - name: helm registry login
-        if: github.event_name != 'pull_request'
         run: |
           echo ${{ secrets.DOCKERHUB_TOKEN }} | helm registry login $OCI_REGISTRY -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: helm push
-        if: github.event_name != 'pull_request'
         run: |
           helm push *-${{ steps.split.outputs.version }}.tgz oci://$OCI_REGISTRY/$OCI_REPO
     
       - name: set chart version  to current tag
         uses: mikefarah/yq@master
-        if: github.event_name != 'pull_request'
         with:
           cmd: yq -i '.version = "${{ steps.split.outputs.version }}"' ${{ matrix.chart }}/Chart.yaml
 
       - name: set chart appVersion to current tag
         uses: mikefarah/yq@master
-        if: github.event_name != 'pull_request'
         with:
           cmd: yq -i '.appVersion = "${{ steps.split.outputs.version }}"' ${{ matrix.chart }}/Chart.yaml
       
       - uses: stefanzweifel/git-auto-commit-action@v5
-        if: github.event_name != 'pull_request'
         with:
           file_pattern: '${{ matrix.chart }}/Chart.yaml'
           branch: kit-ar/main
