@@ -1,6 +1,10 @@
 name: Lint and Test Charts
 
-on: pull_request
+on:
+  push:
+    tags:
+      - kit-ar/pub/v*.*.*
+  pull_request:
 
 jobs:
   lint-test:
@@ -37,9 +41,10 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml
 
-      - name: Create kind cluster
-        uses: helm/kind-action@v1
-        if: steps.list-changed.outputs.changed == 'true'
+      ## Cannot install chart without a mock cloudflare tunnel
+      # - name: Create kind cluster
+      #   uses: helm/kind-action@v1
+      #   if: steps.list-changed.outputs.changed == 'true'
 
-      - name: Run chart-testing (install)
-        run: ct install --config ct.yaml
+      # - name: Run chart-testing (install)
+      #   run: ct install --config ct.yaml
