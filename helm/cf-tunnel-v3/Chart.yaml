@@ -21,3 +21,8 @@ version: "v1.0.1"
 appVersion: "v1.0.1"
 # Let's look professional with a Cloudflare icon.
 icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
+
+maintainers:
+  - name: The maintainers name 
+    email: The maintainers email
+    url: A URL for the maintainer
