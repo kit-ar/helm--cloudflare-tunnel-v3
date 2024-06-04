@@ -23,6 +23,5 @@ appVersion: "v1.0.1"
 icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
 
 maintainers:
-  - name: 'The maintainers name '
+  - name: maintainer
     email: email@email.com
-    url: 'A URL for the maintainer'
