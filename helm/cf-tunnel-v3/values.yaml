@@ -30,10 +30,10 @@ cloudflare:
   # # this is used to define credentials for tunnels created from "cloudflare tunnel create"
   #
   # # ignored if existingSecretCred is set to true
-  # # tunnelCli:
-  # #   AccountTag:
-  # #   TunnelID:
-  # #   TunnelSecret:
+  # tunnelCli:
+  #   AccountTag:
+  #   TunnelID:
+  #   TunnelSecret:
 
   # -------------------------------------------------------------------------------------
   protocol: auto    # auto, http2, and quic
@@ -52,18 +52,18 @@ cloudflare:
   #   # - hostname: hello.example.com
   #   #   service: hello_world
 
-  loglevel:          info     # trace, debug, info, warn, error, fatal, panic
+  loglevel: info     # trace, debug, info, warn, error, fatal, panic
   transportLoglevel: warn     # trace, debug, info, warn, error, fatal, panic
 
 debugContainer:
   enabled: false
-  image:   "alpine:latest"
+  image: "alpine:latest"
 
 image:
   repository: cloudflare/cloudflared
   pullPolicy: IfNotPresent
   # If supplied, this overrides "appVersion"
-  tag: ""
+  tag: "latest"
 
 replicaCount: 2
 
@@ -113,6 +113,3 @@ tolerations: []
 # Default affinity is to spread out over nodes; use this to append/override (depending on affinity_keep_podAntiAffinity).
 affinity: {}
 affinity_keep_podAntiAffinity: true
-
-
-aaa: []
