@@ -1,0 +1,5 @@
+remote: origin
+target-branch: kit-ar/main
+chart-dirs:
+  - helm
+check-version-increment: false
