@@ -52,12 +52,12 @@ cloudflare:
   #   # - hostname: hello.example.com
   #   #   service: hello_world
 
-  loglevel:          info     # trace, debug, info, warn, error, fatal, panic
+  loglevel: info     # trace, debug, info, warn, error, fatal, panic
   transportLoglevel: warn     # trace, debug, info, warn, error, fatal, panic
 
 debugContainer:
   enabled: false
-  image:   "alpine:latest"
+  image: "alpine:latest"
 
 image:
   repository: cloudflare/cloudflared
