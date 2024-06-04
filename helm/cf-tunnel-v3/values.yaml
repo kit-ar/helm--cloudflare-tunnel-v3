@@ -30,10 +30,10 @@ cloudflare:
   # # this is used to define credentials for tunnels created from "cloudflare tunnel create"
   #
   # # ignored if existingSecretCred is set to true
-  # # tunnelCli:
-  # #   AccountTag:
-  # #   TunnelID:
-  # #   TunnelSecret:
+  tunnelCli:
+    AccountTag: mock
+    TunnelID: mock
+    TunnelSecret: mock
 
   # -------------------------------------------------------------------------------------
   protocol: auto    # auto, http2, and quic
