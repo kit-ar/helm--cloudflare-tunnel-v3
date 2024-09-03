@@ -1,0 +1,45 @@
+---
+name: "Helm-Release-Artifact-GHCR.IO"
+
+on:
+  push:
+    tags:
+    - 'kit-ar/pub/v*.*.*'
+
+env:
+  HELM_EXPERIMENTAL_OCI: 1 #enable OCI support
+  HELM_VERSION_TO_INSTALL: 3.13.0 # version of HELM to install
+  # CHART_BASEDIR: ${{ github.workspace }}/helm
+  CHART_DIR: helm/cf-tunnel-v3
+  GHCR_REGISTRY: ghcr.io/${{ github.repository_owner }}
+  # GCR_IMAGE: ghcr.io/${{ github.repository_owner }}/cloudflare-tunnel
+
+jobs:
+  build:
+    name: publish gcr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          # version: ${{ env.HELM_VERSION_TO_INSTALL }} # default is latest
+          version: 'latest' # default is latest (stable)
+          token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+
+
+      - name: Run helm-oci-artifacts-action
+        uses: ./.github/actions/helm-oci-artifacts
+        with:
+          chart_dir: ${{ env.CHART_DIR}}
+          tag: ${{ github.ref_name }}
+          artifact_registry: ${{ env.GHCR_REGISTRY }} 
