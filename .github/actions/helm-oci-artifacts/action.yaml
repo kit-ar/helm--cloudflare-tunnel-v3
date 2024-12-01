@@ -1,0 +1,41 @@
+name: "Helm OCI Artifact"
+description: "Packages a helm chart and uploads it as an artifact to an artifact registry"
+
+inputs:
+  chart_dir:
+    description: "Path to helm chart."
+    required: true
+  tag:
+    description: "Tag that triggered the parent workflow, where we will infer the version from."
+    required: true
+  artifact_registry:
+    description: "Url of artifact registry to upload to."
+    required: true
+  #add auth info as inputs if registry is private
+runs:
+  using: "composite"
+  steps:
+    - name: "Package Helm Chart"
+      shell: bash
+      id: helm_package
+      run: |
+        chart_dir="${{ inputs.chart_dir }}"
+        tag="${{ inputs.tag }}"
+        #tag is of format kit-ar/pub/vA.B.C so we cut on / and get third element, which gives vA.B.C, then we cut the v out to be left with A.B:C
+        chart_version=$(echo "$tag" | cut -d/ -f3 | cut -c2-)
+
+        helm package $chart_dir --version $chart_version
+    - name: "Upload Helm Package to Artifact Registry"
+      shell: bash
+      id: helm_upload_artifact
+      run: |
+        tag="${{ inputs.tag }}"
+        #tag is of format kit-ar/pub/vA.B.C so we cut on / and get third element, which gives vA.B.C, then we cut the v out to be left with A.B:C
+        chart_version=$(echo "$tag" | cut -d/ -f3 | cut -c2-)
+        package_name="cf-tunnel-v3-$chart_version.tgz"
+        artifact_registry="${{ inputs.artifact_registry }}"
+
+        #add auth step before this command if registry is private 
+        # something like echo $GHCR_PAT | docker login ghcr.io -u <username> --password-stdin
+        helm push $package_name $artifact_registry
+    
