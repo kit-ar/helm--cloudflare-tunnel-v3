@@ -18,6 +18,10 @@ on:
 #       - '.github/workflows/helm-release.chart-releaser.yaml'
 #       - 'charts/**/Chart.yaml'
 
+permissions:
+  contents: write
+  packages: write
+
 env:
   HELM_EXPERIMENTAL_OCI: 1 #enable OCI support
   # HELM_VERSION_TO_INSTALL: 3.13.0 # version of HELM to install
@@ -55,3 +59,18 @@ jobs:
           # pages_branch: "kit-ar/gh-pages"
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io \
+            --username "${{ github.actor }}" \
+            --password-stdin
+
+      - name: Package chart for OCI
+        run: |
+          mkdir -p .cr-release-packages
+          helm package "${{ env.CHART_BASEDIR }}/cf-tunnel-v3" --destination .cr-release-packages
+
+      - name: Push chart to GHCR OCI
+        run: |
+          helm push .cr-release-packages/*.tgz "oci://ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}"
