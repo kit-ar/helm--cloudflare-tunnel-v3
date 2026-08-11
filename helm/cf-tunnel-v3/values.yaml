@@ -57,10 +57,12 @@ cloudflare:
 
 debugContainer:
   enabled: false
-  image:   "alpine:latest"
+  # image:   "alpine:latest"
+  image:  "public.ecr.aws/docker/library/alpine:latest"
 
 image:
-  repository: cloudflare/cloudflared
+  # repository: cloudflare/cloudflared
+  repository: "mirror.gcr.io/cloudflare/cloudflared"
   pullPolicy: IfNotPresent
   # If supplied, this overrides "appVersion"
   tag: ""
